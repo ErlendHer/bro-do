@@ -59,9 +59,8 @@
 		try {
 			await createUserWithEmailAndPassword(firebase.auth, email, password);
 		} catch (error) {
-			return failNotification(
-				`Failed to create user with error: ${(error as FirebaseError).message}`
-			);
+			failNotification(`Failed to create user with error: ${(error as FirebaseError).message}`);
+			return;
 		}
 
 		successNotification('User created successfully');
