@@ -78,9 +78,7 @@
 	}
 </script>
 
-<div
-	class="bg-gray-900 w-full overflow-y-auto flex flex-col items-center py-6 px-2 justify-stretch"
->
+<div class="bg-gray-900 w-full overflow-y-auto flex flex-col items-center py-6 justify-stretch">
 	<AddTodoComponent />
 	{#if todoBoard.lists.length > 0}
 		<div

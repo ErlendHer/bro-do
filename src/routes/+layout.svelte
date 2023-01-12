@@ -39,7 +39,7 @@
 		classContent="relative p-2 overflow-auto flex items-center justify-center"
 		closeButton={false}
 	>
-		<div class="bg-gray-900 w-screen min-h-screen flex flex-col items-center justify-center">
+		<div class="bg-gray-900 w-screen min-h-screen flex flex-col items-center justify-center px-3">
 			<slot />
 		</div>
 	</Modal>
