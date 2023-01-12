@@ -1,0 +1,41 @@
+<script lang="ts">
+	import { FirestoreAccess } from '$lib/access/firestore';
+	import { failNotification } from '$lib/notification/notification';
+	import ButtonWithActionSpinner from '../common/ButtonWithActionSpinner.svelte';
+	let inputValue = '';
+	let loading = false;
+
+	async function addTodo() {
+		loading = true;
+		try {
+			await FirestoreAccess.addTodoToFirstList(inputValue);
+		} catch (error) {
+			failNotification('Could not create TODO');
+		}
+		loading = false;
+		inputValue = '';
+	}
+</script>
+
+<div class="w-full flex items-center justify-center">
+	<div class="flex flex-row gap-4 items-stretch mb-2 max-w-lg w-full">
+		<input
+			class="bg-gray-800 text-white rounded-lg min-w-[160px] py-2 px-4 block text-lg font-medium focus:outline-none focus:shadow-outline-orange flex-grow"
+			placeholder="what needs to be done?"
+			bind:value={inputValue}
+			on:keydown={(e) => {
+				if (e.key === 'Enter' && inputValue.length > 0) {
+					addTodo();
+				}
+			}}
+		/>
+		<div class="flex flex-grow">
+			<ButtonWithActionSpinner
+				text="Add todo"
+				onClick={addTodo}
+				{loading}
+				disabled={inputValue.length < 1}
+			/>
+		</div>
+	</div>
+</div>
