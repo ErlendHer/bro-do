@@ -21,7 +21,7 @@
 </script>
 
 <div class="w-full flex items-center justify-center">
-	<div class="flex flex-row gap-4 items-stretch mb-2 max-w-lg w-full">
+	<div class="flex flex-row gap-4 mb-2 max-w-lg w-full items-stretch  justify-center">
 		<input
 			class="bg-gray-800 text-white rounded-lg min-w-[160px] py-2 px-4 block text-lg font-medium focus:outline-none focus:shadow-outline-orange flex-grow"
 			placeholder="what needs to be done?"
@@ -32,13 +32,11 @@
 				}
 			}}
 		/>
-		<div class="flex flex-grow">
-			<ButtonWithActionSpinner
-				text="Add todo"
-				onClick={addTodo}
-				{loading}
-				disabled={inputValue.length < 1}
-			/>
-		</div>
+		<ButtonWithActionSpinner
+			text="Add todo"
+			onClick={addTodo}
+			{loading}
+			disabled={inputValue.length < 1}
+		/>
 	</div>
 </div>

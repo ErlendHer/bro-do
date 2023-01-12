@@ -1,40 +1,17 @@
 <script lang="ts" context="module">
-	import { getContext } from 'svelte';
-
-	function getOpenClose() {
-		return getContext<{
-			open: (alert: typeof Alert, props: AlertProps) => void;
-			close: () => void;
-		}>('simple-modal');
-	}
-
-	function getConfirmation(
-		title: string,
-		message: string,
-		onOk: (result: string) => Promise<void>
-	) {
-		const { open, close } = getOpenClose();
-		open(Alert, { title, message, onOk, onCancel: close });
-	}
-
-	export function openAddBoardModal() {
-		const { open, close } = getOpenClose();
-
-		open(Alert, {
-			title: 'Create new List',
-			message: 'Enter desired title',
-			acceptsInput: true,
-			onOk: async (listName) => {
-				await FirestoreAccess.newList(listName);
-				notificationsStore.push({
-					text: `Successfully created list ${listName}`,
-					type: NotificationType.Success
-				});
-			},
-			inputValidator: (listName) => listName !== '',
-			onCancel: close
-		});
-	}
+	export const addBoardModalTemplate = {
+		title: 'Create new List',
+		message: 'Enter desired title',
+		acceptsInput: true,
+		onOk: async (listName: string) => {
+			await FirestoreAccess.newList(listName);
+			notificationsStore.push({
+				text: `Successfully created list ${listName}`,
+				type: NotificationType.Success
+			});
+		},
+		inputValidator: (listName: string) => listName !== ''
+	};
 </script>
 
 <script lang="ts">
@@ -46,6 +23,24 @@
 	import MenuOption from './MenuOption.svelte';
 	import TodoCard from './TodoCard.svelte';
 	import { notificationsStore, NotificationType } from '$lib/stores/notifications.store';
+	import { getContext } from 'svelte';
+
+	const { open, close } = getContext<{
+		open: (alert: typeof Alert, props: AlertProps) => void;
+		close: () => void;
+	}>('simple-modal');
+
+	function getConfirmation(
+		title: string,
+		message: string,
+		onOk: (result: string) => Promise<void>
+	) {
+		open(Alert, { title, message, onOk, onCancel: close });
+	}
+
+	export function openAddBoardModal() {
+		open(Alert, { ...addBoardModalTemplate, onCancel: close });
+	}
 
 	export let todoList: TodoList;
 	let snapshotBeforeMove: TodoList | null = null;

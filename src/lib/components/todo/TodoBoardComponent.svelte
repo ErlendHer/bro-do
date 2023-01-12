@@ -1,22 +1,34 @@
 <script lang="ts">
 	import { firebase } from '$lib/access/firebase';
 	import { FirestoreAccess } from '$lib/access/firestore';
+	import Alert, { type AlertProps } from '../common/alert/Alert.svelte';
+
 	import { notificationsStore, NotificationType } from '$lib/stores/notifications.store';
 	import type { TodoBoard, TodoList } from '$lib/stores/todos.store';
 	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import ButtonWithActionSpinner from '../common/ButtonWithActionSpinner.svelte';
 	import AddTodoComponent from './AddTodoComponent.svelte';
-	import TodoListComponent, { openAddBoardModal } from './TodoList.svelte';
+	import TodoListComponent, { addBoardModalTemplate } from './TodoList.svelte';
+	import { getContext } from 'svelte';
 
 	export let todoBoard: TodoBoard;
 	let loading = false;
 
 	let snapshotBeforeMove: TodoBoard | null = null;
 
+	const { open, close } = getContext<{
+		open: (alert: typeof Alert, props: AlertProps) => void;
+		close: () => void;
+	}>('simple-modal');
+
 	function deepCopyTodoBoard() {
 		const newBoard: TodoBoard = { ...todoBoard };
 		todoBoard.lists = todoBoard.lists.map((list) => ({ ...list }));
 		return newBoard;
+	}
+
+	export function openAddBoardModal() {
+		open(Alert, { ...addBoardModalTemplate, onCancel: close });
 	}
 
 	async function logOut() {
