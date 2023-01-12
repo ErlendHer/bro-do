@@ -75,7 +75,8 @@
 			successNotification('Successfully signed in');
 		} catch (error) {
 			console.error(error);
-			return failNotification(`Failed to sign in with error: ${(error as FirebaseError).message}`);
+			failNotification(`Failed to sign in with error: ${(error as FirebaseError).message}`);
+			return;
 		}
 	}
 
