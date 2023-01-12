@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { FirestoreAccess } from '$lib/access/firestore';
-	import { failNotification } from '$lib/notification/notification';
+	import { notificationsStore, NotificationType } from '$lib/stores/notifications.store';
 	import ButtonWithActionSpinner from '../common/ButtonWithActionSpinner.svelte';
 	let inputValue = '';
 	let loading = false;
@@ -10,7 +10,10 @@
 		try {
 			await FirestoreAccess.addTodoToFirstList(inputValue);
 		} catch (error) {
-			failNotification('Could not create TODO');
+			notificationsStore.push({
+				text: `Failed to create todo item`,
+				type: NotificationType.Error
+			});
 		}
 		loading = false;
 		inputValue = '';

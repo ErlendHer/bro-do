@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { firebase } from '$lib/access/firebase';
+	import NotificationManager from '$lib/components/NotificationManager.svelte';
 	import { user } from '$lib/stores/user.store';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { onDestroy, onMount } from 'svelte';
 	import Notifications from 'svelte-notifications';
-	import type { Unsubscriber } from 'svelte/store';
 	import Modal from 'svelte-simple-modal';
+	import type { Unsubscriber } from 'svelte/store';
 	import '../app.postcss';
 
-	let unsubscribe: Unsubscriber | undefined;
 	let initialized = false;
 
 	const authSubscriber = () => {
@@ -28,15 +28,10 @@
 	onMount(async () => {
 		authSubscriber();
 	});
-
-	onDestroy(() => {
-		if (unsubscribe) {
-			unsubscribe();
-		}
-	});
 </script>
 
 <Notifications>
+	<NotificationManager />
 	<Modal
 		unstyled={true}
 		classBg="fixed top-0 left-0 w-screen h-screen flex flex-col justify-center bg-gray-600 bg-opacity-30"

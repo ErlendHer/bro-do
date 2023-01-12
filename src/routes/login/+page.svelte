@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { firebase } from '$lib/access/firebase';
 	import ButtonWithActionSpinner from '$lib/components/common/ButtonWithActionSpinner.svelte';
-	import { failNotification, successNotification } from '$lib/notification/notification';
+	import { notificationsStore, NotificationType } from '$lib/stores/notifications.store';
 	import { user } from '$lib/stores/user.store';
 	import type { FirebaseError } from 'firebase/app';
 	import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
@@ -59,11 +59,16 @@
 		try {
 			await createUserWithEmailAndPassword(firebase.auth, email, password);
 		} catch (error) {
-			failNotification(`Failed to create user with error: ${(error as FirebaseError).message}`);
+			notificationsStore.push({
+				text: `Failed to create user with error: ${(error as FirebaseError).message}`,
+				type: NotificationType.Error
+			});
 			return;
 		}
-
-		successNotification('User created successfully');
+		notificationsStore.push({
+			text: `User created successfully`,
+			type: NotificationType.Success
+		});
 	}
 
 	async function login() {
@@ -71,10 +76,16 @@
 
 		try {
 			await signInWithEmailAndPassword(firebase.auth, email, password);
-			successNotification('Successfully signed in');
+			notificationsStore.push({
+				text: `Successfully signed in`,
+				type: NotificationType.Success
+			});
 		} catch (error) {
 			console.error(error);
-			failNotification(`Failed to sign in with error: ${(error as FirebaseError).message}`);
+			notificationsStore.push({
+				text: `Failed to sign in with error: ${(error as FirebaseError).message}`,
+				type: NotificationType.Error
+			});
 			return;
 		}
 	}

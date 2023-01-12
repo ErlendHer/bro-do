@@ -26,7 +26,10 @@
 			acceptsInput: true,
 			onOk: async (listName) => {
 				await FirestoreAccess.newList(listName);
-				successNotification(`Successfully created list ${listName}`);
+				notificationsStore.push({
+					text: `Successfully created list ${listName}`,
+					type: NotificationType.Success
+				});
 			},
 			inputValidator: (listName) => listName !== '',
 			onCancel: close
@@ -36,13 +39,13 @@
 
 <script lang="ts">
 	import { FirestoreAccess } from '$lib/access/firestore';
-	import { failNotification, successNotification } from '$lib/notification/notification';
 	import type { Todo, TodoList } from '$lib/stores/todos.store';
 	import type { DndEvent } from 'svelte-dnd-action';
 	import { dndzone } from 'svelte-dnd-action';
 	import Alert, { type AlertProps } from '../common/alert/Alert.svelte';
 	import MenuOption from './MenuOption.svelte';
 	import TodoCard from './TodoCard.svelte';
+	import { notificationsStore, NotificationType } from '$lib/stores/notifications.store';
 
 	export let todoList: TodoList;
 	let snapshotBeforeMove: TodoList | null = null;
@@ -146,7 +149,10 @@
 		try {
 			FirestoreAccess.deleteTodoItem(todoList.id, id);
 		} catch (error: any) {
-			failNotification(`Failed to delete todo item: ${error.message}`);
+			notificationsStore.push({
+				text: `Failed to delete todo item: ${error.message}`,
+				type: NotificationType.Error
+			});
 		}
 	}
 </script>
@@ -205,7 +211,10 @@
 									'All todos in this list will be deleted permanently',
 									async () => {
 										await FirestoreAccess.deleteAllTodos(todoList.id);
-										successNotification('All todos deleted in list');
+										notificationsStore.push({
+											text: `All todos deleted in list`,
+											type: NotificationType.Success
+										});
 									}
 								);
 							}}
@@ -218,7 +227,10 @@
 									'This list and all its todos will be deleted permanently',
 									async () => {
 										await FirestoreAccess.deleteList(todoList.id);
-										successNotification('List deleted succesfully');
+										notificationsStore.push({
+											text: `'List deleted successfully'`,
+											type: NotificationType.Success
+										});
 									}
 								);
 							}}

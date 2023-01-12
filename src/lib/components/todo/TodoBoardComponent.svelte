@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { firebase } from '$lib/access/firebase';
 	import { FirestoreAccess } from '$lib/access/firestore';
-	import { failNotification } from '$lib/notification/notification';
+	import { notificationsStore, NotificationType } from '$lib/stores/notifications.store';
 	import type { TodoBoard, TodoList } from '$lib/stores/todos.store';
 	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import ButtonWithActionSpinner from '../common/ButtonWithActionSpinner.svelte';
@@ -24,7 +24,10 @@
 		try {
 			await firebase.auth.signOut();
 		} catch (error: any) {
-			failNotification(error.message);
+			notificationsStore.push({
+				text: `Failed to logout with message ${error.message}`,
+				type: NotificationType.Error
+			});
 		}
 		loading = false;
 	}
@@ -54,7 +57,10 @@
 		try {
 			await FirestoreAccess.updateListOrders(newLists);
 		} catch (error: any) {
-			failNotification(`Failed to move board with message: ${error.message}`);
+			notificationsStore.push({
+				text: `Failed to move board with message: ${error.message}`,
+				type: NotificationType.Error
+			});
 		}
 		snapshotBeforeMove = null;
 	}

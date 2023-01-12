@@ -10,7 +10,7 @@
 </script>
 
 <script lang="ts">
-	import { failNotification } from '$lib/notification/notification';
+	import { notificationsStore, NotificationType } from '$lib/stores/notifications.store';
 
 	import ButtonWithActionSpinner from '../ButtonWithActionSpinner.svelte';
 
@@ -31,7 +31,10 @@
 		try {
 			await onOk(inputValue);
 		} catch (error: any) {
-			failNotification(`Failed with error: ${error.message}`);
+			notificationsStore.push({
+				text: `Failed with error: ${error.message}`,
+				type: NotificationType.Error
+			});
 		}
 		onCancel();
 	};

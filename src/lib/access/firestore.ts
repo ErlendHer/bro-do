@@ -18,8 +18,7 @@ import {
 	query,
 	runTransaction,
 	setDoc,
-	updateDoc,
-	where
+	updateDoc
 } from 'firebase/firestore';
 import { Collection, type ListSchema, type TodoSchema, type UserSchema } from './database.schema';
 import { firebase } from './firebase';
